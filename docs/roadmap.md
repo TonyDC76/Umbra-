@@ -14,6 +14,7 @@
 ## Phase 1 — Engine and platform feasibility
 
 - [ ] Compare existing Gecko-based browser-shell options with building a new shell.
+- [ ] Complete the [engine feasibility spike](architecture/engine-feasibility.md), including a minimal GeckoView Android proof and a demonstrated desktop build path.
 - [ ] Confirm supported Gecko/GeckoView versions and licence obligations.
 - [ ] Build minimal launchable prototypes for Windows, macOS, Linux, and Android.
 - [ ] Map each privacy requirement to supported APIs/preferences on each platform.
