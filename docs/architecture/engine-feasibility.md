@@ -1,14 +1,17 @@
 # Project Umbra — Engine Feasibility Notes
 
-**Status:** Preliminary research; desktop architecture remains undecided  
+**Status:** Preliminary research; Windows implementation path remains undecided  
 **Reviewed:** 2026-10-13  
-**Scope:** Gecko/GeckoView across Windows, macOS, Linux, and Android
+**Initial scope:** Windows desktop  
+**Long-term scope:** macOS, Linux, and Android
 
 ## Executive summary
 
-The Gecko direction is well supported on Android through GeckoView, which Mozilla documents as an embeddable Gecko library suitable for browser development. The desktop side needs a separate feasibility decision: do not assume GeckoView is a cross-platform desktop embedding API. Before choosing a desktop implementation, compare building on Firefox's desktop codebase with any supported embedding approach and quantify maintenance/build costs.
+The immediate goal is to prove a maintainable Windows browser engine/build path and the core privacy controls. macOS, Linux, and Android remain long-term targets, but their prototypes should not block the initial Windows feasibility work.
 
-**Recommendation:** Keep Gecko/GeckoView as the engine direction to investigate, but do not lock the desktop implementation until a small technical spike proves the path and privacy controls.
+GeckoView is documented as an Android embedding library. Do not assume it is a desktop embedding API. For Windows, compare a maintained Firefox desktop-codebase route with any supported alternative and quantify maintenance/build costs. Keep future platform ports as independent feasibility decisions.
+
+**Recommendation:** Run a Windows-first spike. Do not lock the implementation until it demonstrates navigation, a maintainable security-update path, and access to the required privacy controls.
 
 ## Findings
 
@@ -30,20 +33,29 @@ The cost is not just rendering a web page. Umbra needs browser chrome, tab/sessi
 Official Mozilla starting point for desktop-codebase investigation:
 - Firefox source documentation: https://firefox-source-docs.mozilla.org/
 
-## Feasibility spike
+## Windows-first feasibility spike
 
-Run a short, evidence-driven spike before committing to a full implementation:
+Complete this spike before building the full interface:
 
-1. **Android proof:** build a minimal GeckoView app that opens a GeckoRuntime, creates a GeckoSession, and loads a page.
-2. **Desktop proof:** identify the maintained desktop build path and produce a minimal browser build or a documented blocker for each of Windows, macOS, and Linux.
-3. **Privacy API map:** for each candidate, verify access to cookies, storage partitioning, permissions, service workers, caches, profile lifecycle, and shutdown cleanup.
+1. **Build path:** identify the maintained Windows engine/build route and build or launch a minimal browser proof.
+2. **Navigation proof:** load ordinary HTTPS pages and verify basic navigation and error handling.
+3. **Privacy API map:** verify access to cookies, storage partitioning, permissions, service workers, caches, profile lifecycle, and shutdown cleanup.
 4. **Build/maintenance estimate:** record toolchains, hardware/storage requirements, build times, release cadence, patch burden, and security-update workflow.
 5. **Licence review:** identify relevant engine and dependency licences and obligations before distribution.
-6. **Decision review:** compare options against privacy-control coverage, platform coverage, compatibility, build/maintenance cost, and long-term security updateability.
+6. **Decision review:** assess privacy-control coverage, compatibility, build/maintenance cost, and timely security updates.
+
+## Future platform gates
+
+After the Windows approach is viable, evaluate each future target independently:
+
+- **Linux and macOS:** demonstrate a maintained desktop build/integration route and map the same privacy controls.
+- **Android:** build a minimal GeckoView app using GeckoRuntime and GeckoSession, then verify storage and lifecycle controls.
+
+Do not make future-platform prototypes a prerequisite for the first Windows milestone.
 
 ## Required output
 
-Create a comparison table with one row per candidate and platform, recording:
+Create a Windows candidate comparison first, then extend it as future platforms are evaluated. Record:
 
 - Supported integration/build route and source documentation
 - Engine versioning and security update mechanism
@@ -57,10 +69,10 @@ Create a comparison table with one row per candidate and platform, recording:
 
 Do not start broad browser feature implementation until:
 
-- A viable desktop path is demonstrated or its blockers are accepted explicitly.
-- Android GeckoView integration is demonstrated.
-- The core isolation and cleanup controls have a plausible, testable implementation path on every target platform.
+- A viable Windows path is demonstrated or its blockers are accepted explicitly.
+- The core isolation and cleanup controls have a plausible, testable Windows implementation path.
 - The maintenance burden is understood well enough to support timely security updates.
+- Future macOS, Linux, and Android work remains documented but does not block this initial decision.
 
 ## Source notes
 
