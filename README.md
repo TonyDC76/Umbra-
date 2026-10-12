@@ -16,6 +16,7 @@ Umbra's current design direction is strict site-data isolation by default, clear
 
 - [Browser requirements](docs/requirements/browser-requirements.md)
 - [Component design](docs/architecture/component-design.md)
+- [Engine feasibility notes](docs/architecture/engine-feasibility.md)
 - [Roadmap](docs/roadmap.md)
 - [Contribution guidelines](CONTRIBUTING.md)
 
