@@ -1,16 +1,17 @@
 # Project Umbra — Component Design
 
-**Status:** Proposed architecture; validate against current Gecko APIs before implementation  
+**Status:** Proposed architecture; validate against current engine APIs before implementation  
 **Related baseline:** docs/requirements/browser-requirements.md  
-**Platforms:** Windows, macOS, Linux, Android  
-**Engine direction:** Gecko / GeckoView
+**Initial target:** Windows desktop  
+**Long-term targets:** macOS, Linux, Android  
+**Engine direction:** Select and prove a Windows implementation first; do not assume one integration path covers every future platform
 
 ## 1. Design goals
 
 - Separate privileged browser chrome from untrusted web content.
 - Centralise privacy decisions rather than duplicating policy in UI widgets.
 - Make cleanup deterministic, observable, and recoverable.
-- Share policy and test definitions while isolating platform-specific adapters.
+- Share policy and test definitions while isolating platform-specific adapters, without requiring future platforms to be implemented in the first release.
 - Prefer supported Gecko APIs and documented preferences over fragile engine patches.
 
 ## 2. Proposed logical components
@@ -29,7 +30,7 @@
 | Privacy Dashboard | Displays effective policy, exceptions, and cleanup outcomes | Never promise more than the engine can guarantee |
 | Settings & Persistence | Bookmarks, browser preferences, download configuration | Separate browser-owned state from site data |
 | Diagnostics | Local diagnostics and test instrumentation | No URLs, cookies, tokens, or page contents by default |
-| Platform Adapter | OS integration, file picker, downloads, notifications, lifecycle hooks | Keep platform-specific code isolated |
+| Windows Platform Adapter | Windows integration, file picker, downloads, notifications, lifecycle hooks | Keep Windows-specific code isolated; future OS adapters are separate milestones |
 
 ## 3. Core flows
 
@@ -94,16 +95,15 @@ These are design-level interfaces, not final code signatures. Final APIs depend 
 
 Unsupported or unobservable state must not be presented as confirmed absence.
 
-## 5. Gecko and GeckoView feasibility mapping
+## 5. Engine feasibility and platform expansion
 
-This section is a research checklist, not a claim that every API exists on every platform.
+The first implementation milestone is Windows only. Prove a maintainable Windows engine/build path and validate the required privacy controls before broad browser-shell work. Do not assume that GeckoView provides a desktop embedding route or that an approach suitable for Windows automatically ports to macOS and Linux.
 
-- **Desktop Gecko:** investigate profile lifecycle, browsing contexts, site isolation, cookie policy, storage partitioning, permissions, cache and service-worker cleanup, shutdown observers, and browser automation.
-- **Android GeckoView:** investigate runtime/session lifecycle, content permissions, supported settings/preferences, storage-clearing APIs, and Android activity/process shutdown behaviour.
-- **Shared policy layer:** policy schema, exception model, cleanup plan, user-facing explanations, and platform-independent acceptance tests.
-- **Platform adapters:** shell integration, file handling, downloads, external protocol handoff, and lifecycle events.
+For Windows, investigate profile lifecycle, browsing contexts, site isolation, cookie policy, storage partitioning, permissions, cache and service-worker cleanup, shutdown behaviour, and browser automation. Record the supported API/preferences, engine version, limitations, and a test of effective behaviour. Avoid undocumented preferences unless the risk is explicitly reviewed.
 
-For every required capability, record its supported API/preference, minimum engine version, platform coverage, limitations, and a test of effective behaviour. Avoid undocumented preferences unless the risk is explicitly reviewed.
+For future Android work, investigate GeckoView runtime/session lifecycle, content permissions, supported settings/preferences, storage-clearing APIs, and Android activity/process shutdown behaviour. For future macOS and Linux work, independently validate a maintained desktop build/integration path.
+
+Keep shared policy, exception schema, cleanup planning, user-facing explanations, and portable tests separate from OS-specific shell integration where practical. Future platform ports must pass the same privacy acceptance criteria before release.
 
 ## 6. Privacy dashboard state model
 
@@ -133,16 +133,17 @@ Provide test injection for clock/time, supported storage categories, cleanup suc
 
 ## 9. Open architecture decisions
 
-1. Confirm language, build system, and whether to extend an existing Gecko-based shell or create a new one.
-2. Pin supported Gecko/GeckoView version ranges.
-3. Identify APIs for each required storage category and lifecycle hook.
+1. Confirm language/build system and choose a maintainable Windows engine/build route.
+2. Pin the Windows engine version and update strategy.
+3. Identify Windows APIs for every required storage category and lifecycle hook.
 4. Define profile/session semantics, especially cleanup across multiple windows.
 5. Finalise exception schema and persistence.
-6. Choose the first vertical slice and CI platforms.
+6. Define platform-adapter boundaries and CI for Windows.
+7. Maintain a separate feasibility gate for each future platform.
 
 ## 10. Acceptance criteria
 
-- Every privacy requirement maps to components and tests.
+- Every privacy requirement maps to components and tests for Windows; future platform support has explicit validation gates.
 - UI components do not independently decide storage policy.
 - Every cleanup category has a supported API, documented limitation, or explicit exclusion.
 - Failure and unknown states are visible and testable.
