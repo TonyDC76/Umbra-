@@ -1,8 +1,9 @@
 # Project Umbra — Browser Requirements
 
 **Status:** Initial baseline for review  
-**Platforms:** Windows, macOS, Linux, Android  
-**Engine direction:** Gecko on desktop; GeckoView on Android  
+**Initial platform:** Windows desktop  
+**Long-term platforms:** Windows, macOS, Linux, Android  
+**Engine direction:** To be validated on Windows first; future platforms may use platform-appropriate Gecko integration  
 **Out of scope:** iOS
 
 ## 1. Purpose and principles
@@ -16,14 +17,23 @@ Umbra is a privacy-focused, cross-platform web browser. Privacy protections shou
 5. Maintain consistent policy across platforms while documenting platform differences.
 6. Verify behaviour through tests, not just configuration values.
 
-## 2. Supported platforms
+## 2. Platform scope and delivery sequence
 
-- Windows desktop
+### Initial release
+
+- Windows desktop only.
+- Design, implementation, packaging, and acceptance testing initially target Windows.
+- Engine selection and privacy-control feasibility must be demonstrated on Windows before broad UI implementation.
+
+### Long-term targets
+
 - macOS desktop
 - Linux desktop
 - Android
 
-iOS is excluded from the current project scope.
+These remain explicit long-term goals, not commitments for the first release. Keep shared policy and browser logic separate from OS integration where practical, and record platform-specific assumptions so future ports are possible without imposing unverified cross-platform requirements on the initial release.
+
+iOS is outside the current plan.
 
 ## 3. Privacy and site storage baseline
 
@@ -84,7 +94,7 @@ Clearly distinguish site-owned data from browser-owned settings and operating-sy
 - Provide a menu/dashboard entry point for privacy status, permissions, exceptions, downloads, history, and settings.
 - Make privacy controls available both for the current site and in global settings.
 - Explain consequential privacy changes before applying them.
-- Support desktop and Android form factors, including keyboard navigation on desktop and accessible touch controls on Android.
+- For the initial Windows release, support desktop form factors and keyboard navigation. Future platform work must add platform-appropriate accessibility and interaction requirements.
 
 ## 5. Functional and security requirements
 
@@ -97,7 +107,7 @@ Clearly distinguish site-owned data from browser-owned settings and operating-sy
 
 ## 6. Storage baseline acceptance criteria
 
-1. Default isolation is enabled on each supported platform.
+1. Default isolation is enabled and verified on Windows for the initial release; each future platform must pass the same policy tests before release.
 2. Site storage is not unintentionally shared with unrelated sites.
 3. Each in-scope storage category has a documented cleanup disposition.
 4. Eligible data is cleared after normal browser close.
@@ -109,7 +119,7 @@ Clearly distinguish site-owned data from browser-owned settings and operating-sy
 
 ## 7. Open decisions
 
-- Exact Gecko preferences and APIs for isolation and partitioning.
+- Exact Windows engine/build path and the APIs available for isolation and partitioning.
 - Definition of browser close when downloads, background tasks, multiple windows, or sessions remain active.
 - Which categories are always cleared, optionally retained, or outside Umbra's control.
 - Whether to support a separately retained profile or persistent site exception.
@@ -118,4 +128,4 @@ Clearly distinguish site-owned data from browser-owned settings and operating-sy
 
 ## 8. Change control
 
-Changes to requirements should record rationale, compatibility impact, test impact, and corresponding updates to component design and test plans. A configured preference alone is not proof of effective behaviour.
+Changes to requirements should record rationale, platform scope, compatibility impact, test impact, and corresponding updates to component design and test plans. A configured preference alone is not proof of effective behaviour.
