@@ -9,7 +9,7 @@ Umbra is a privacy-focused cross-platform browser.
 - Do not weaken privacy defaults to solve compatibility issues without a documented decision and user-consent design.
 - Never log cookies, authentication tokens, page contents, or unnecessary browsing data.
 - Do not claim a privacy control works until its effective behaviour has been tested.
-- Keep platform-specific code behind a clear adapter where practical.
+- Keep Windows-specific code behind a clear adapter where practical, without adding speculative abstractions solely for hypothetical portability. Preserve shared policy boundaries and document assumptions that may affect future macOS, Linux, and Android ports.
 
 ## Before changing code
 
@@ -35,4 +35,4 @@ Use docs/decisions/ for decisions that materially affect architecture, privacy, 
 
 ## Scope
 
-Current target platforms are Windows, macOS, Linux, and Android. iOS is outside the current scope.
+Initial delivery targets Windows desktop only. Long-term targets remain macOS, Linux, and Android, to be added through separate feasibility and implementation milestones. iOS is outside the current plan.
